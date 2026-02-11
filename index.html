@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="YOU للاتصالات - عالم من التواصل">
+    <title>YOU | عالم من التواصل</title>
+    <!-- خط Cairo -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* --- تنسيقات القوائم --- */
+        .main-dropdown {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s ease-in-out;
+            transition-delay: 0.1s;
+            z-index: 50;
+            background-color: #ffcc4e;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .group:hover .main-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            transition-delay: 0s;
+        }
+
+        .sub-menu {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(10px);
+            transition: all 0.3s ease-in-out;
+            transition-delay: 0.1s;
+            z-index: 100;
+            top: 0;
+            margin-right: -2px;
+            background-color: #ffcc4e;
+            border: 1px solid #e5e7eb;
+            color: #000000;
+            padding-right: 5px;
+        }
+
+        .sub-menu::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 100%;
+            height: 100%;
+            width: 10px;
+        }
+
+        .group\/item:hover > .sub-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0);
+            transition-delay: 0s;
+        }
+
+        .hover-item {
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-radius: 6px;
+            color: #000000 !important; 
+            font-size: 0.875rem;
+        }
+
+        .hover-item:hover {
+            background-color: #000000 !important;
+            color: #ffcc4e !important;
+        }
+
+        .hover-item:hover > div,
+        .hover-item:hover > div > i, 
+        .hover-item:hover > div > span,
+        .hover-item:hover > i {
+            color: #ffcc4e !important;
+        }
+
+        .sub-menu .hover-item:hover {
+            background-color: #000000 !important;
+            color: #ffcc4e !important;
+        }
+        .sub-menu .hover-item:hover > div,
+        .sub-menu .hover-item:hover > div > i,
+        .sub-menu .hover-item:hover > div > span,
+        .sub-menu .hover-item:hover > i {
+            color: #ffcc4e !important;
+        }
+
+        /* --- تنسيقات السلايدر --- */
+        .slide {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 1000ms ease-in-out;
+            z-index: 10;
+        }
+        .slide.active {
+            opacity: 1;
+            z-index: 20;
+        }
+        .slider-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .slider-indicator.active {
+            background-color: #ffcc4e;
+            transform: scale(1.2);
+        }
+
+        /* --- تنسيقات الكروت المتداخلة --- */
+        .overlap-card {
+            background-color: #ffcc4e;
+            border: 2px solid #ffffff;
+            border-radius: 20px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .overlap-card i, 
+        .overlap-card span,
+        .overlap-card svg {
+            color: #000000 !important;
+            transition: none;
+        }
+
+        .overlap-card:hover {
+            transform: scale(1.1);
+            background-color: #ffffff;
+            border-color: #000000;
+            z-index: 50;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+        }
+
+        /* --- تنسيقات الأنميشن --- */
+        .reveal-text {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s ease-out;
+        }
+        .reveal-text.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .card-animate {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        .card-animate.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .animate-from-right {
+            opacity: 0;
+            transform: translateX(50px); 
+            transition: all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        .animate-from-left {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .animate-from-bottom {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .animate-from-right.active,
+        .animate-from-left.active,
+        .animate-from-bottom.active {
+            opacity: 1;
+            transform: translate(0, 0);
+        }
+
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+        .delay-300 { transition-delay: 300ms; }
+
+        /* تخصيص placeholder لشريط البحث */
+        ::placeholder {
+            color: #000000;
+            opacity: 0.7; 
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .slide,
+            .reveal-text,
+            .card-animate,
+            .animate-from-right,
+            .animate-from-left,
+            .animate-from-bottom {
+                transition: none !important;
+                transform: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <!-- Navbar (Black Background) -->
+    <nav class="bg-black shadow-lg sticky top-0 z-50 border-b border-gray-800">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center cursor-pointer">
+                    <img src="Photos/YOU%20Logo.png" alt="YOU Logo" class="h-14 w-auto rounded-lg object-contain border-2 border-black">
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden lg:flex space-x-reverse space-x-6 items-center">
+                    
+                    <!-- 1. الباقات -->
+                    <div class="group relative py-5">
+                        <button type="button" class="flex items-center gap-1 text-gray-200 font-medium text-sm hover:text-black transition h-full">
+                            <span>الباقات</span>
+                            <i data-lucide="chevron-down" class="w-3.5 h-3.5 transition-transform group-hover:rotate-180"></i>
+                        </button>
+                        
+                        <div class="main-dropdown absolute top-full right-0 w-60 shadow-xl rounded-xl border border-gray-100 py-2">
+                            <!-- 4G -->
+                            <div class="group/item relative px-4 py-2.5 hover-item flex justify-between items-center">
+                                <div class="flex items-center gap-2"><i data-lucide="wifi" class="w-3.5 h-3.5"></i><span class="font-bold text-sm">باقات الفورجي (4G)</span></div><i data-lucide="chevron-left" class="w-3.5 h-3.5"></i>
+                                <div class="sub-menu absolute right-full w-56 shadow-xl rounded-xl border border-gray-100 mr-1 py-2">
+                                    <div class="group/item relative px-4 py-2 hover-item flex justify-between items-center"><span class="font-medium text-sm">سمارت فورجي</span><i data-lucide="chevron-left" class="w-3.5 h-3.5"></i><div class="sub-menu absolute right-full w-44 shadow-xl rounded-xl border border-gray-100 mr-1 py-2 max-h-80 overflow-y-auto"><div class="px-4 py-2 hover-item flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-black"></div> 0.5 جيجا</div><div class="px-4 py-2 hover-item flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-black"></div> 1 جيجا</div><div class="px-4 py-2 hover-item flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-black"></div> 3 جيجا</div><div class="px-4 py-2 hover-item flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-black"></div> 5 جيجا</div><div class="px-4 py-2 hover-item flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-black"></div> 8 جيجا</div><div class="px-4 py-2 hover-item flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-black"></div> 9 جيجا</div><div class="px-4 py-2 hover-item flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-black"></div> 20 جيجا</div></div></div>
+                                    <div class="group/item relative px-4 py-2 hover-item flex justify-between items-center"><span class="font-medium text-sm">مكس فورجي</span><i data-lucide="chevron-left" class="w-3.5 h-3.5"></i><div class="sub-menu absolute right-full w-44 shadow-xl rounded-xl border border-gray-100 mr-1 py-2"><div class="px-4 py-2 hover-item">1.5 جيجا</div><div class="px-4 py-2 hover-item">6 جيجا</div><div class="px-4 py-2 hover-item">10 جيجا</div><div class="px-4 py-2 hover-item">30 جيجا</div></div></div>
+                                </div>
+                            </div>
+                            <!-- 2G -->
+                            <div class="group/item relative px-4 py-2.5 hover-item flex justify-between items-center">
+                                <div class="flex items-center gap-2"><i data-lucide="signal" class="w-3.5 h-3.5"></i><span class="font-bold text-sm">باقات التوجي (2G)</span></div><i data-lucide="chevron-left" class="w-3.5 h-3.5"></i>
+                                <div class="sub-menu absolute right-full w-56 shadow-xl rounded-xl border border-gray-100 mr-1 py-2">
+                                     <div class="group/item relative px-4 py-2 hover-item flex justify-between items-center"><span class="font-medium text-sm">باقات سوا</span><i data-lucide="chevron-left" class="w-3.5 h-3.5"></i><div class="sub-menu absolute right-full w-44 shadow-xl rounded-xl border border-gray-100 mr-1 py-2"><div class="px-4 py-2 hover-item">سوا 250</div></div></div>
+                                     <div class="group/item relative px-4 py-2 hover-item flex justify-between items-center"><span class="font-medium text-sm">سمارت نت</span><i data-lucide="chevron-left" class="w-3.5 h-3.5"></i><div class="sub-menu absolute right-full w-44 shadow-xl rounded-xl border border-gray-100 mr-1 py-2"><div class="px-4 py-2 hover-item">1 جيجا</div><div class="px-4 py-2 hover-item">2 جيجا</div></div></div>
+                                     <div class="group/item relative px-4 py-2 hover-item flex justify-between items-center"><span class="font-medium text-sm">مكس</span><i data-lucide="chevron-left" class="w-3.5 h-3.5"></i><div class="sub-menu absolute right-full w-44 shadow-xl rounded-xl border border-gray-100 mr-1 py-2"><div class="px-4 py-2 hover-item font-medium">مكس الأسبوعية</div><div class="px-4 py-2 hover-item font-medium">مكس 300</div><div class="px-4 py-2 hover-item font-medium">مكس بلس</div><div class="px-4 py-2 hover-item font-medium">مكس 600</div></div></div>
+                                </div>
+                            </div>
+                            <!-- Others -->
+                            <div class="group/item relative px-4 py-2.5 hover-item flex justify-between items-center"><div class="flex items-center gap-2"><i data-lucide="phone-call" class="w-3.5 h-3.5"></i><span class="font-bold text-sm">باقات المكالمات</span></div><i data-lucide="chevron-left" class="w-3.5 h-3.5"></i><div class="sub-menu absolute right-full w-44 shadow-xl rounded-xl border border-gray-100 mr-1 py-2"><div class="px-4 py-2 hover-item">400 دقيقة</div></div></div>
+                            <div class="group/item relative px-4 py-2.5 hover-item flex justify-between items-center"><div class="flex items-center gap-2"><i data-lucide="message-square" class="w-3.5 h-3.5"></i><span class="font-bold text-sm">باقات الرسائل</span></div><i data-lucide="chevron-left" class="w-3.5 h-3.5"></i><div class="sub-menu absolute right-full w-44 shadow-xl rounded-xl border border-gray-100 mr-1 py-2"><div class="px-4 py-2 hover-item">750 رسالة</div></div></div>
+                            <div class="group/item relative px-4 py-2.5 hover-item flex justify-between items-center"><div class="flex items-center gap-2"><i data-lucide="share-2" class="w-3.5 h-3.5"></i><span class="font-bold text-sm">التواصل الاجتماعي</span></div><i data-lucide="chevron-left" class="w-3.5 h-3.5"></i><div class="sub-menu absolute right-full w-44 shadow-xl rounded-xl border border-gray-100 mr-1 py-2"><div class="px-4 py-2 hover-item">اجتماعي الأسبوعية</div><div class="px-4 py-2 hover-item">اجتماعي الشهرية</div><div class="px-4 py-2 hover-item">باقة واتساب</div></div></div>
+                        </div>
+                    </div>
+
+                    <!-- 2. الخدمات -->
+                    <div class="group relative py-5">
+                        <button type="button" class="flex items-center gap-1 text-gray-200 font-medium text-sm hover:text-yellow-400 transition">
+                            <span>الخدمات</span>
+                            <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
+                        </button>
+                        
+                        <div class="main-dropdown absolute top-full right-0 w-60 shadow-xl rounded-xl border border-gray-100 py-2">
+                            <!-- المجانية -->
+                            <div class="group/item relative px-4 py-2.5 hover-item flex justify-between items-center"><div class="flex items-center gap-2"><i data-lucide="gift" class="w-3.5 h-3.5"></i><span class="font-bold text-sm">مجانية</span></div><i data-lucide="chevron-left" class="w-3.5 h-3.5"></i><div class="sub-menu absolute right-full w-44 shadow-xl rounded-xl border border-gray-100 mr-1 py-2"><div class="px-4 py-2 hover-item">دفع مسبق</div><div class="px-4 py-2 hover-item">فوترة</div></div></div>
+                            <!-- مدفوعة -->
+                            <div class="group/item relative px-4 py-2.5 hover-item flex justify-between items-center"><div class="flex items-center gap-2"><i data-lucide="credit-card" class="w-3.5 h-3.5"></i><span class="font-bold text-sm">مدفوعة</span></div><i data-lucide="chevron-left" class="w-3.5 h-3.5"></i><div class="sub-menu absolute right-full w-44 shadow-xl rounded-xl border border-gray-100 mr-1 py-2"><div class="px-4 py-2 hover-item">دفع مسبق</div><div class="px-4 py-2 hover-item">فوترة</div></div></div>
+                            <!-- خدمات مضافة -->
+                            <div class="group/item relative px-4 py-2.5 hover-item flex justify-between items-center"><div class="flex items-center gap-2"><i data-lucide="plus-circle" class="w-3.5 h-3.5"></i><span class="font-bold text-sm">خدمات مضافة</span></div><i data-lucide="chevron-left" class="w-3.5 h-3.5"></i><div class="sub-menu absolute right-full w-44 shadow-xl rounded-xl border border-gray-100 mr-1 py-2"><div class="px-4 py-2 hover-item">رياضة</div><div class="px-4 py-2 hover-item">ترفيه</div><div class="px-4 py-2 hover-item">صحتي</div><div class="px-4 py-2 hover-item">تعليم</div><div class="px-4 py-2 hover-item">عالم المرأة</div><div class="px-4 py-2 hover-item">إسلامية</div><div class="px-4 py-2 hover-item">أخبار</div></div></div>
+                            <!-- خدمات الشريحة -->
+                            <div class="group/item relative px-4 py-2.5 hover-item flex justify-between items-center"><div class="flex items-center gap-2"><i data-lucide="cpu" class="w-3.5 h-3.5"></i><span class="font-bold text-sm">خدمات الشريحة</span></div><i data-lucide="chevron-left" class="w-3.5 h-3.5"></i><div class="sub-menu absolute right-full w-44 shadow-xl rounded-xl border border-gray-100 mr-1 py-2"><div class="px-4 py-2 hover-item">شريحة جديدة</div><div class="px-4 py-2 hover-item">تغيير الشريحة</div><div class="px-4 py-2 hover-item">نقل الملكية</div></div></div>
+                        </div>
+                    </div>
+
+                    <!-- 3. الشركات -->
+                    <div class="group relative py-5">
+                        <button type="button" class="flex items-center gap-1 text-gray-200 font-medium text-sm hover:text-yellow-400 transition">
+                            <span>الشركات</span>
+                            <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
+                        </button>
+                        <div class="main-dropdown absolute top-full right-0 w-56 shadow-xl rounded-b-xl border-t-4 border-gray-800">
+                            <ul class="py-2 text-sm text-gray-700">
+                                <li class="px-4 py-2 hover-item">المجموعات المغلقة</li>
+                                <li class="px-4 py-2 hover-item">شريحة الإنترنت</li>
+                                <li class="px-4 py-2 hover-item">الرسائل التجارية</li>
+                                <li class="px-4 py-2 hover-item">المكالمات الجماعية</li>
+                                <li class="px-4 py-2 hover-item">الفواتير</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 4. الأفراد -->
+                    <div class="group relative py-5">
+                        <button type="button" class="flex items-center gap-1 text-gray-200 font-medium text-sm hover:text-yellow-400 transition">
+                            <span>الأفراد</span>
+                            <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
+                        </button>
+                        <div class="main-dropdown absolute top-full right-0 w-48 shadow-xl rounded-b-xl border-t-4 border-gray-800">
+                            <div class="group/item relative px-4 py-2.5 hover-item flex justify-between items-center">
+                                <span class="font-medium text-sm">الدفع المسبق</span><i data-lucide="chevron-left" class="w-3 h-3"></i>
+                                <div class="sub-menu absolute right-full w-48 shadow-xl rounded-xl border border-gray-100 mr-1 py-2">
+                                    <div class="group/item relative px-4 py-2 hover-item flex justify-between items-center"><span class="text-sm">التعرفة</span><i data-lucide="chevron-left" class="w-3 h-3"></i><div class="sub-menu absolute right-full w-32 shadow-xl rounded-xl border border-gray-100 mr-1 py-2"><div class="px-4 py-2 hover-item text-sm">كلام</div><div class="px-4 py-2 hover-item text-sm">شباب</div><div class="px-4 py-2 hover-item text-sm">سوا</div></div></div>
+                                    <div class="px-4 py-2 hover-item text-sm">تعبئة الرصيد</div>
+                                </div>
+                            </div>
+                            <div class="group/item relative px-4 py-2.5 hover-item flex justify-between items-center">
+                                <span class="font-medium text-sm">الفوترة</span><i data-lucide="chevron-left" class="w-3 h-3"></i>
+                                <div class="sub-menu absolute right-full w-48 shadow-xl rounded-xl border border-gray-100 mr-1 py-2"><div class="px-4 py-2 hover-item text-sm">التعرفة</div></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 5. دولي -->
+                    <div class="group relative py-5">
+                        <button type="button" class="flex items-center gap-1 text-gray-200 font-medium text-sm hover:text-yellow-400 transition">
+                            <span>دولي</span>
+                            <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
+                        </button>
+                        <div class="main-dropdown absolute top-full right-0 w-48 shadow-xl rounded-b-xl border-t-4 border-gray-800">
+                            <ul class="py-2 text-sm text-gray-700">
+                                <li class="px-4 py-2 hover-item flex items-center gap-2"><i data-lucide="globe" class="w-3.5 h-3.5"></i> الاتصالات الدولية</li>
+                                <li class="px-4 py-2 hover-item flex items-center gap-2"><i data-lucide="map-pin" class="w-3.5 h-3.5"></i> وجهات أخرى</li>
+                                <li class="px-4 py-2 hover-item flex items-center gap-2"><i data-lucide="star" class="w-3.5 h-3.5"></i> خدمات خاصة</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 6. التجوال الدولي -->
+                    <div class="group relative py-5">
+                        <button type="button" class="flex items-center gap-1 text-gray-200 font-medium text-sm hover:text-yellow-400 transition">
+                            <span>التجوال الدولي</span>
+                            <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
+                        </button>
+                        <div class="main-dropdown absolute top-full right-0 w-48 shadow-xl rounded-b-xl border-t-4 border-gray-800">
+                            
+                            <!-- نظام الفوترة -->
+                            <div class="group/item relative px-4 py-2.5 hover-item flex justify-between items-center">
+                                <span class="text-sm">نظام الفوترة</span>
+                                <i data-lucide="chevron-left" class="w-3 h-3"></i>
+                                <div class="sub-menu absolute right-full w-48 shadow-xl rounded-xl border border-gray-100 mr-1 py-2">
+                                    <div class="px-4 py-2 hover-item text-sm">قائمة الدول</div>
+                                    <div class="px-4 py-2 hover-item text-sm">تعرفة التجوال</div>
+                                    <div class="px-4 py-2 hover-item text-sm">تجوال الإنترنت</div>
+                                    <div class="px-4 py-2 hover-item text-sm">تجوال الرسائل</div>
+                                </div>
+                            </div>
+
+                            <!-- الجوي والبحري -->
+                            <div class="group/item relative px-4 py-2.5 hover-item flex justify-between items-center">
+                                <span class="text-sm">الجوي والبحري</span>
+                                <i data-lucide="chevron-left" class="w-3 h-3"></i>
+                                <div class="sub-menu absolute right-full w-48 shadow-xl rounded-xl border border-gray-100 mr-1 py-2">
+                                    <div class="px-4 py-2 hover-item text-sm">التجوال البحري</div>
+                                    <div class="px-4 py-2 hover-item text-sm">التجوال الجوي</div>
+                                </div>
+                            </div>
+
+                            <!-- دفع مسبق -->
+                            <div class="group/item relative px-4 py-2.5 hover-item flex justify-between items-center">
+                                <span class="text-sm">دفع مسبق</span>
+                                <i data-lucide="chevron-left" class="w-3 h-3"></i>
+                                <div class="sub-menu absolute right-full w-48 shadow-xl rounded-xl border border-gray-100 mr-1 py-2">
+                                    <div class="px-4 py-2 hover-item text-sm">قائمة الدول</div>
+                                    <div class="px-4 py-2 hover-item text-sm">تعرفة التجوال</div>
+                                    <div class="px-4 py-2 hover-item text-sm">تجوال الإنترنت</div>
+                                </div>
+                            </div>
+
+                            <!-- باقات التجوال -->
+                            <div class="group/item relative px-4 py-2.5 hover-item flex justify-between items-center">
+                                <span class="text-sm">باقات التجوال</span>
+                                <i data-lucide="chevron-left" class="w-3 h-3"></i>
+                                <div class="sub-menu absolute right-full w-48 shadow-xl rounded-xl border border-gray-100 mr-1 py-2">
+                                    <div class="px-4 py-2 hover-item text-sm">باقات السعودية</div>
+                                </div>
+                            </div>
+
+                            <!-- تعبئة الرصيد -->
+                            <div class="px-4 py-2.5 hover-item flex justify-between items-center cursor-pointer">
+                                <span class="text-sm">تعبئة الرصيد</span>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- 7. YOU -->
+                    <a href="#" class="text-gray-200 font-medium text-sm hover:text-yellow-400 transition">YOU</a>
+
+                </div>
+
+                <!-- Search Bar (Modified Background to Yellow, Text Black) -->
+                <div class="hidden lg:block relative">
+                    <input type="text" placeholder="بحث..." class="bg-yellow-400 text-black placeholder-black border border-yellow-400 rounded-full px-4 py-1.5 focus:outline-none focus:bg-white focus:border-yellow-400 w-64 text-sm pr-10 transition-all focus:w-72 font-bold" aria-label="بحث">
+                    <i data-lucide="search" class="w-4 h-4 text-black absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none"></i>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button type="button" class="lg:hidden text-black" onclick="toggleMobileMenu()" aria-label="فتح القائمة">
+                    <i data-lucide="menu" class="w-7 h-7"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- قائمة الجوال (نفسها) -->
+        <div id="mobile-menu" class="hidden lg:hidden bg-white border-t border-gray-200 absolute w-full h-screen overflow-y-auto pb-20">
+            <div class="p-4 space-y-4">
+                <!-- Search for Mobile (Modified to Yellow) -->
+                <div class="relative mb-4">
+                    <input type="text" placeholder="بحث..." class="w-full bg-yellow-400 text-black placeholder-black border border-yellow-400 rounded-full px-4 py-2 focus:outline-none focus:bg-white focus:border-yellow-400 text-sm pr-10 font-bold" aria-label="بحث">
+                    <i data-lucide="search" class="w-4 h-4 text-black absolute right-3 top-1/2 transform -translate-y-1/2"></i>
+                </div>
+
+                <div class="border-b border-gray-100 pb-2"><button type="button" onclick="toggleSubmenu('mob-packages')" class="flex justify-between w-full font-bold text-gray-800">الباقات<i data-lucide="chevron-down" class="w-5 h-5"></i></button><div id="mob-packages" class="hidden mt-2 space-y-2 pl-4"><p class="font-bold text-yellow-600 text-sm mt-2">باقات الفورجي</p><div class="pl-2 border-r-2 border-gray-100 pr-2"><p class="text-xs font-bold text-gray-500">سمارت فورجي</p><p class="text-sm text-gray-600">0.5, 1, 3, 5, 8, 9, 20 جيجا</p><p class="text-xs font-bold text-gray-500 mt-2">مكس فورجي</p><p class="text-sm text-gray-600">1.5, 6, 10, 30 جيجا</p></div><p class="font-bold text-blue-600 text-sm mt-2">باقات التوجي</p><div class="pl-2 border-r-2 border-gray-100 pr-2"><p class="text-xs font-bold text-gray-500">باقات سوا</p><p class="text-sm text-gray-600">سوا 250</p><p class="text-xs font-bold text-gray-500 mt-2">سمارت نت</p><p class="text-sm text-gray-600">1 جيجا، 2 جيجا</p><p class="text-xs font-bold text-gray-500 mt-2">مكس</p><p class="text-sm text-gray-600">مكس الأسبوعية، مكس 300، مكس بلس، مكس 600</p></div><p class="font-bold text-green-600 text-sm mt-2">باقات المكالمات</p><div class="pl-2 border-r-2 border-gray-100 pr-2"><p class="text-sm text-gray-600">400 دقيقة</p></div><p class="font-bold text-blue-500 text-sm mt-2">باقات الرسائل</p><div class="pl-2 border-r-2 border-gray-100 pr-2"><p class="text-sm text-gray-600">750 رسالة</p></div><p class="font-bold text-pink-500 text-sm mt-2">التواصل الاجتماعي</p><div class="pl-2 border-r-2 border-gray-100 pr-2"><p class="text-sm text-gray-600">اجتماعي الأسبوعية، اجتماعي الشهرية، باقة واتساب</p></div></div></div>
+                <div class="border-b border-gray-100 pb-2"><button type="button" onclick="toggleSubmenu('mob-services')" class="flex justify-between w-full font-medium text-gray-800">الخدمات<i data-lucide="chevron-down" class="w-5 h-5"></i></button><div id="mob-services" class="hidden mt-2 space-y-2 pl-4 text-sm text-gray-600"><p class="font-bold text-green-600 text-sm mt-2">مجانية</p><div class="pl-2 border-r-2 border-gray-100 pr-2"><p class="text-sm text-gray-600">دفع مسبق، فوترة</p></div><p class="font-bold text-red-500 text-sm mt-2">مدفوعة</p><div class="pl-2 border-r-2 border-gray-100 pr-2"><p class="text-sm text-gray-600">دفع مسبق، فوترة</p></div><p class="font-bold text-purple-500 text-sm mt-2">خدمات مضافة</p><div class="pl-2 border-r-2 border-gray-100 pr-2"><p class="text-sm text-gray-600">رياضة، ترفيه، صحتي، تعليم...</p></div><p class="font-bold text-gray-800 text-sm mt-2">خدمات الشريحة</p><div class="pl-2 border-r-2 border-gray-100 pr-2"><p class="text-sm text-gray-600">شريحة جديدة، تغيير الشريحة، نقل الملكية</p></div></div></div>
+                <div class="border-b border-gray-100 pb-2"><button type="button" onclick="toggleSubmenu('mob-business')" class="flex justify-between w-full font-medium text-gray-800">الشركات<i data-lucide="chevron-down" class="w-5 h-5"></i></button><div id="mob-business" class="hidden mt-2 space-y-1 pl-4 text-sm text-gray-600"><p>المجموعات المغلقة</p><p>شريحة الإنترنت</p><p>الرسائل التجارية</p></div></div>
+                <div class="border-b border-gray-100 pb-2"><button type="button" onclick="toggleSubmenu('mob-individuals')" class="flex justify-between w-full font-medium text-gray-800">الأفراد<i data-lucide="chevron-down" class="w-5 h-5"></i></button><div id="mob-individuals" class="hidden mt-2 space-y-1 pl-4 text-sm text-gray-600"><p class="font-bold text-gray-700 mt-2">الدفع المسبق</p><div class="pl-2 border-r-2 border-gray-100 pr-2"><p>التعرفة (كلام، شباب، سوا)</p><p>تعبئة الرصيد</p></div><p class="font-bold text-gray-700 mt-2">الفوترة</p><div class="pl-2 border-r-2 border-gray-100 pr-2"><p>التعرفة</p></div></div></div>
+                <div class="border-b border-gray-100 pb-2"><button type="button" onclick="toggleSubmenu('mob-international')" class="flex justify-between w-full font-medium text-gray-800">دولي<i data-lucide="chevron-down" class="w-5 h-5"></i></button><div id="mob-international" class="hidden mt-2 space-y-1 pl-4 text-sm text-gray-600"><p>الاتصالات الدولية</p><p>وجهات أخرى</p><p>خدمات خاصة</p></div></div>
+                <div class="border-b border-gray-100 pb-2"><button type="button" onclick="toggleSubmenu('mob-roaming')" class="flex justify-between w-full font-medium text-gray-800">التجوال الدولي<i data-lucide="chevron-down" class="w-5 h-5"></i></button><div id="mob-roaming" class="hidden mt-2 space-y-1 pl-4 text-sm text-gray-600"><p class="font-bold text-gray-700 mt-2">نظام الفوترة</p><div class="pl-2 border-r-2 border-gray-100 pr-2"><p>قائمة الدول، تعرفة التجوال، تجوال الإنترنت، تجوال الرسائل</p></div><p class="font-bold text-gray-700 mt-2">الجوي والبحري</p><div class="pl-2 border-r-2 border-gray-100 pr-2"><p>التجوال البحري، التجوال الجوي</p></div><p class="font-bold text-gray-700 mt-2">دفع مسبق</p><div class="pl-2 border-r-2 border-gray-100 pr-2"><p>قائمة الدول، تعرفة التجوال، تجوال الإنترنت</p></div><p class="font-bold text-gray-700 mt-2">باقات التجوال</p><div class="pl-2 border-r-2 border-gray-100 pr-2"><p>باقات السعودية</p></div><p class="font-bold text-gray-700 mt-2 cursor-pointer">تعبئة الرصيد</p></div></div>
+                <a href="#" class="block font-medium text-yellow-600 py-2">YOU</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Slider -->
+    <header class="relative h-[650px] overflow-hidden bg-black text-black" id="hero-slider">
+        <!-- Slide 1 -->
+        <div class="slide active absolute inset-0 transition-opacity duration-1000" aria-hidden="false">
+            <div class="absolute inset-0 bg-[url('Photos/4G.webp')] bg-cover bg-center"></div>
+            
+            <div class="container mx-auto px-4 relative z-20 h-full flex flex-col justify-center items-start pt-10">
+                <span class="bg-yellow-400 text-black px-4 py-1.5 rounded font-bold text-sm mb-4 inline-block">سمارت فورجي</span>
+                <h1 class="text-5xl md:text-6xl font-black mb-4 leading-tight text-gray-900">
+                    <span class="inline-flex items-center gap-2 bg-black px-5 py-2 rounded-full mb-3">
+                        <span class="text-yellow-400">عيش</span>
+                        <span class="text-white">التحدي</span>
+                    </span><br>
+                    <span class="text-gray-900">بسرعة 4G</span>
+                </h1>
+                <p class="text-lg md:text-xl text-gray-700 mb-8 max-w-lg leading-relaxed">
+                    تمتع بأسرع إنترنت مع باقات مكس وسمارت الجديدة. تغطية أوسع وسرعة لا تتوقف.
+                </p>
+                <div class="flex gap-3">
+                    <button type="button" class="bg-yellow-400 text-black px-8 py-3 rounded-full font-bold text-base hover:bg-yellow-300 transition shadow-lg shadow-yellow-400/20">
+                        اشترك الآن
+                    </button>
+                    <button type="button" class="border border-white text-white px-8 py-3 rounded-full font-bold text-base hover:bg-white hover:text-black transition">
+                        اعرف المزيد
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="slide absolute inset-0 transition-opacity duration-1000" aria-hidden="true">
+            <div class="absolute inset-0 bg-[url('Photos/MIX.webp')] bg-cover bg-center"></div>
+            <div class="container mx-auto px-4 relative z-20 h-full flex flex-col justify-center items-start pt-10">
+                <span class="bg-yellow-400 text-black px-4 py-1.5 rounded font-bold text-sm mb-4 inline-block">باقات مكس</span>
+                <h1 class="text-5xl md:text-6xl font-black mb-4 leading-tight text-white">
+                    تواصل <br>
+                    <span class="text-white">بلا حدود</span>
+                </h1>
+                <div class="inline-flex items-center bg-black text-white px-5 py-2 rounded-full font-bold text-5xl md:text-6xl mb-3 leading-tight">
+                    تنوع يلبي احتياجاتك
+                </div>
+                <p class="text-5xl md:text-6xl text-black mb-8 max-w-lg leading-tight">
+                    بتقنيتي 2G و 4G
+                </p>
+                <div class="flex gap-3">
+                    <button type="button" class="bg-yellow-400 text-black px-8 py-3 rounded-full font-bold text-base hover:bg-yellow-300 transition shadow-lg shadow-yellow-400/20">
+                        استكشف الباقات
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="slide absolute inset-0 transition-opacity duration-1000" aria-hidden="true">
+            <div class="absolute inset-0 bg-[url('Photos/Busi.png')] bg-cover bg-center"></div>
+            <div class="container mx-auto px-4 relative z-20 h-full flex flex-col justify-center items-start pt-10">
+                <span class="bg-yellow-400 text-black px-4 py-1.5 rounded font-bold text-sm mb-4 inline-block">للشركات</span>
+                <h1 class="text-5xl md:text-6xl font-black mb-4 leading-tight text-black">
+                    حلول أعمال <br>
+                    <span class="text-black">ذكية ومتكاملة</span>
+                </h1>
+                <p class="text-lg md:text-xl text-black mb-8 max-w-lg">خدمات متكاملة لنمو أعمالك ورفع كفاءة فريقك.</p>
+                <button type="button" class="bg-yellow-400 text-black px-8 py-3 rounded-full font-bold text-base hover:bg-yellow-300 transition">تواصل معنا</button>
+            </div>
+        </div>
+
+        <!-- Slide 4 -->
+        <div class="slide absolute inset-0 transition-opacity duration-1000" aria-hidden="true">
+            <div class="absolute inset-0 bg-[url('Photos/YOUapp.webp')] bg-cover bg-center"></div>
+            <div class="container mx-auto px-4 relative z-20 h-full flex flex-col justify-center items-start pt-10">
+                <span class="bg-yellow-400 text-black px-4 py-1.5 rounded font-bold text-sm mb-4 inline-block">تطبيق YOU</span>
+                <h1 class="text-5xl md:text-6xl font-black mb-4 leading-tight text-black">
+                    تحكم في حساباتك <br>
+                    <span class="text-black">بكل سهولة</span>
+                </h1>
+                <p class="text-lg md:text-xl text-black mb-8 max-w-lg">حمل التطبيق الآن واستمتع بإدارة رصيدك وخدماتك بكل سهولة.</p>
+                <div class="flex gap-3">
+                    <button type="button" class="bg-yellow-400 text-black px-6 py-2.5 rounded-full font-bold text-sm hover:bg-yellow-300 transition">App Store</button>
+                    <button type="button" class="bg-transparent border-2 border-white text-black px-6 py-2.5 rounded-full font-bold text-sm hover:bg-white hover:text-black transition">Google Play</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Indicators -->
+        <div class="absolute bottom-20 left-1/2 transform -translate-x-1/2 z-30 flex gap-3">
+            <button type="button" class="slider-indicator active" onclick="goToSlide(0)" aria-label="الشريحة 1" aria-current="true"></button>
+            <button type="button" class="slider-indicator" onclick="goToSlide(1)" aria-label="الشريحة 2" aria-current="false"></button>
+            <button type="button" class="slider-indicator" onclick="goToSlide(2)" aria-label="الشريحة 3" aria-current="false"></button>
+            <button type="button" class="slider-indicator" onclick="goToSlide(3)" aria-label="الشريحة 4" aria-current="false"></button>
+        </div>
+    </header>
+
+    <!-- Overlapping Cards -->
+    <div class="relative z-40 -mt-14 container mx-auto px-4 pointer-events-none">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mx-auto w-fit justify-items-center">
+            <div class="overlap-card w-28 h-28 p-2 flex flex-col items-center justify-center gap-2 pointer-events-auto">
+                <i data-lucide="wifi" class="w-6 h-6"></i>
+                <span class="font-bold text-xs text-center leading-tight">سمارت فورجي</span>
+            </div>
+            <div class="overlap-card w-28 h-28 p-2 flex flex-col items-center justify-center gap-2 pointer-events-auto">
+                <i data-lucide="layers" class="w-6 h-6"></i>
+                <span class="font-bold text-xs text-center leading-tight">مكس فورجي</span>
+            </div>
+            <div class="overlap-card w-28 h-28 p-2 flex flex-col items-center justify-center gap-2 pointer-events-auto">
+                <i data-lucide="users" class="w-6 h-6"></i>
+                <span class="font-bold text-xs text-center leading-tight">باقات سوا</span>
+            </div>
+            <div class="overlap-card w-28 h-28 p-2 flex flex-col items-center justify-center gap-2 pointer-events-auto">
+                <i data-lucide="plane" class="w-6 h-6"></i>
+                <span class="font-bold text-xs text-center leading-tight">باقات التجوال</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Section: Text Columns (4G Services & YOUapp) - Optimized -->
+    <section class="py-12 bg-white pt-10">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 text-center md:text-right">
+                
+                <!-- Column 1: 4G Services -->
+                <div class="space-y-0 reveal-text">
+                    <h2 class="text-3xl font-bold text-black border-b-4 border-[#ffcc4e] inline-block pb-1 mb-6">خدمات الفورجي</h2>
+                    <p class="text-gray-600 leading-relaxed text-lg text-justify">
+                        اكتشف سرعة لا تضاهى مع شبكة YOU 4G. صممت تقنياتنا لتمنحك اتصالاً مستقراً وتحميلاً فائق السرعة، سواء كنت تشاهد محتواك المفضل أو تنجز أعمالك. تغطيتنا الواسعة تضمن لك البقاء على اتصال دائم أينما كنت، مع باقات مرنة تناسب نمط حياتك الرقمي. انضم إلينا وعيش تجربة التحدي الحقيقي.
+                    </p>
+                </div>
+
+                <!-- Column 2: YOUapp -->
+                <div class="space-y-0 reveal-text delay-300">
+                    <h2 class="text-3xl font-bold text-black border-b-4 border-[#ffcc4e] inline-block pb-1 mb-6">تطبيق YOUapp</h2>
+                    <p class="text-gray-600 leading-relaxed text-lg text-justify">
+                        تحكم في عالمك مع تطبيق YOUapp. إدارة شاملة لرصيدك، تفعيل الباقات، وسداد الفواتير بلمسة واحدة. واجهة عصرية توفر وقتك وجهدك، مع عروض حصرية ومكافآت مميزة بانتظارك. لا داعي للانتظار، كل خدماتنا بين يديك الآن. حمل التطبيق واستمتع بتجربة رقمية سلسة ومبتكرة.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Latest Offers Section -->
+    <section class="py-12 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-10">
+                <h2 class="inline-block bg-[#ffcc4e] text-black border-2 border-white rounded-xl px-6 py-2 font-bold text-2xl shadow-sm">
+                    آخر العروض
+                </h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="card-animate delay-100 bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 group flex flex-col h-full">
+                    <div class="h-48 overflow-hidden flex-shrink-0">
+                        <img src="Photos/OldN.webp" alt="استرجع رقمك القديم" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    </div>
+                    <div class="p-6 text-right flex flex-col flex-grow">
+                        <h3 class="text-xl font-bold text-black mb-2">استرجع رقمك القديم</h3>
+                        <p class="text-black text-sm mb-4 leading-loose text-justify flex-grow">
+                            أعلنت شركة YOU للاتصالات حملة "استرجع خطك القديم" تقديراً لعملائها الأوفياء. تهدف الحملة لإعادة وصل المشتركين الذين انقطعت خطوطهم ومنحهم فرصة العودة للشبكة الأوسع في اليمن بمميزات جديدة، وتشمل خطوط الفوترة المتوقفة بين 2013 و2023.
+                        </p>
+                        <div class="mt-auto pt-2">
+                            <a href="#" class="text-black font-bold text-sm flex items-center gap-1 hover:text-yellow-600 transition-colors">
+                                عرض التفاصيل <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-animate delay-200 bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 group flex flex-col h-full">
+                    <div class="h-48 overflow-hidden flex-shrink-0">
+                        <img src="Photos/student.webp" alt="خط الطالب" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    </div>
+                    <div class="p-6 text-right flex flex-col flex-grow">
+                        <h3 class="text-xl font-bold text-black mb-2">خط الطالب</h3>
+                        <p class="text-black text-sm mb-4 leading-loose text-justify flex-grow">
+                            أطلقت الشركة خط الطالب لقطاع الطلاب في الجامعات اليمنية، والذي يحمل في طياته العديد من التخفيضات الكبيرة والفوائد العملية للطالب، مما يسهم بشكل فعال في تحسين التواصل الجامعي ودعم مسيرة البحث العلمي والأكاديمي للطلاب.
+                        </p>
+                        <div class="mt-auto pt-2">
+                            <a href="#" class="text-black font-bold text-sm flex items-center gap-1 hover:text-yellow-600 transition-colors">
+                                عرض التفاصيل <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-animate delay-300 bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 group flex flex-col h-full">
+                    <div class="h-48 overflow-hidden flex-shrink-0">
+                        <img src="Photos/Bundle.webp" alt="باقة الطالب" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    </div>
+                    <div class="p-6 text-right flex flex-col flex-grow">
+                        <h3 class="text-xl font-bold text-black mb-2">باقة الطالب</h3>
+                        <p class="text-black text-sm mb-4 leading-loose text-justify flex-grow">
+                            باقة مخصصة لطلاب الجامعة حملت العديد من التخفيضات العالية على الأرصدة المختلفة من مكالمات ورسائل وإنترنت، كما وفرت للطلاب العديد من الميزات الفعلية المنافسة والتي تناسب احتياجاتهم اليومية والدراسية بشكل متكامل.
+                        </p>
+                        <div class="mt-auto pt-2">
+                            <a href="#" class="text-black font-bold text-sm flex items-center gap-1 hover:text-yellow-600 transition-colors">
+                                عرض التفاصيل <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- New Services Section (Nagham & Tammenhom) -->
+    <section class="py-16 bg-white overflow-hidden">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row items-center gap-8 mb-20">
+                <div class="md:w-1/2 order-2 md:order-1 animate-from-right">
+                    <div class="text-right">
+                        <h3 class="text-3xl font-bold text-black mb-4 border-r-4 border-[#ffcc4e] pr-4">خدمة نغم</h3>
+                        <p class="text-gray-600 text-lg leading-relaxed mb-6">
+                            هذه الخدمة تتيح للمتصل بك أن يستمع إلى نغمة مخصصة بحسب اختيارك بدلاً عن نغمة الرنين التقليدية مع خيارات واسعة جداً من النغمات والتفضيلات.
+                        </p>
+                        <a href="#" class="inline-block bg-black text-yellow-400 px-6 py-2 rounded-full font-bold hover:bg-gray-800 transition">
+                            استمع للنغمات
+                        </a>
+                    </div>
+                </div>
+                <div class="md:w-1/2 order-1 md:order-2 animate-from-bottom">
+                    <div class="relative overflow-hidden rounded-3xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
+                        <img src="Photos/nagham.png" alt="خدمة نغم" class="w-full h-64 md:h-80 object-cover transform hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col md:flex-row-reverse items-center gap-8">
+                <div class="md:w-1/2 order-2 md:order-1 animate-from-left">
+                    <div class="text-right">
+                        <h3 class="text-3xl font-bold text-black mb-4 border-r-4 border-[#ffcc4e] pr-4">طمنهم عليك</h3>
+                        <p class="text-gray-600 text-lg leading-relaxed mb-6">
+                            هذه الخدمة واحدة من خدمات التجوال الدولي المميزة وتسمح لك هذه الخدمة بإرسال رسالة نصية إلى أهلك ومحبيك فور وصولك إلى أي بلد من بلدان التجوال الدولي حول العالم.
+                        </p>
+                        <a href="#" class="inline-block bg-black text-yellow-400 px-6 py-2 rounded-full font-bold hover:bg-gray-800 transition">
+                            تفاصيل الخدمة
+                        </a>
+                    </div>
+                </div>
+                <div class="md:w-1/2 order-1 md:order-2 animate-from-bottom">
+                    <div class="relative overflow-hidden rounded-3xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
+                        <img src="Photos/roaming.png" alt="خدمة طمنهم عليك" class="w-full h-64 md:h-80 object-cover transform hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Updated Footer -->
+    <footer class="bg-gray-900 text-white pt-16 pb-8 border-t-4 border-yellow-400">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-8 mb-12 text-center md:text-right border-b border-gray-800 pb-12">
+                <div>
+                    <h4 class="text-yellow-400 font-bold mb-4 text-lg">الباقات</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-white transition">باقات الفورجي</a></li>
+                        <li><a href="#" class="hover:text-white transition">باقات التوجي</a></li>
+                        <li><a href="#" class="hover:text-white transition">باقات المكالمات</a></li>
+                        <li><a href="#" class="hover:text-white transition">باقات الرسائل</a></li>
+                        <li><a href="#" class="hover:text-white transition">التواصل الاجتماعي</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-yellow-400 font-bold mb-4 text-lg">الخدمات</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-white transition">خدمات مجانية</a></li>
+                        <li><a href="#" class="hover:text-white transition">خدمات مدفوعة</a></li>
+                        <li><a href="#" class="hover:text-white transition">خدمات مضافة</a></li>
+                        <li><a href="#" class="hover:text-white transition">خدمات الشريحة</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-yellow-400 font-bold mb-4 text-lg">الشركات</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-white transition">المجموعات المغلقة</a></li>
+                        <li><a href="#" class="hover:text-white transition">شريحة الإنترنت</a></li>
+                        <li><a href="#" class="hover:text-white transition">الرسائل التجارية</a></li>
+                        <li><a href="#" class="hover:text-white transition">المكالمات الجماعية</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-yellow-400 font-bold mb-4 text-lg">الأفراد</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-white transition">الدفع المسبق</a></li>
+                        <li><a href="#" class="hover:text-white transition">الفوترة</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-yellow-400 font-bold mb-4 text-lg">دولي</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-white transition">الاتصالات الدولية</a></li>
+                        <li><a href="#" class="hover:text-white transition">وجهات أخرى</a></li>
+                        <li><a href="#" class="hover:text-white transition">خدمات خاصة</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-yellow-400 font-bold mb-4 text-lg">التجوال الدولي</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-white transition">نظام الفوترة</a></li>
+                        <li><a href="#" class="hover:text-white transition">الجوي والبحري</a></li>
+                        <li><a href="#" class="hover:text-white transition">دفع مسبق</a></li>
+                        <li><a href="#" class="hover:text-white transition">باقات التجوال</a></li>
+                        <li><a href="#" class="hover:text-white transition">تعبئة الرصيد</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-yellow-400 font-bold mb-4 text-lg">YOU</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-white transition">من نحن</a></li>
+                        <li><a href="#" class="hover:text-white transition">اتصل بنا</a></li>
+                        <li><a href="#" class="hover:text-white transition">الفروع</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="flex flex-col md:flex-row justify-between items-center gap-8 mb-12">
+                <div class="flex items-center gap-3 order-2 md:order-1">
+                    <img src="Photos/YOU%20Logo.png" alt="YOU Logo" class="h-16 w-auto rounded-lg object-contain border-2 border-black">
+                </div>
+
+                <div class="flex flex-wrap justify-center gap-6 order-1 md:order-2">
+                    <a href="#" class="text-white transition-all duration-300 hover:text-[#ffcc4e] hover:scale-125" aria-label="Facebook">
+                        <i data-lucide="facebook" class="w-6 h-6"></i>
+                    </a>
+                    <a href="#" class="text-white transition-all duration-300 hover:text-[#ffcc4e] hover:scale-125" aria-label="Instagram">
+                        <i data-lucide="instagram" class="w-6 h-6"></i>
+                    </a>
+                    <a href="#" class="text-white transition-all duration-300 hover:text-[#ffcc4e] hover:scale-125" aria-label="WhatsApp">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-circle"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
+                    </a>
+                    <a href="#" class="text-white transition-all duration-300 hover:text-[#ffcc4e] hover:scale-125" aria-label="X">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-twitter"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg>
+                    </a>
+                    <a href="#" class="text-white transition-all duration-300 hover:text-[#ffcc4e] hover:scale-125" aria-label="TikTok">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
+                    </a>
+                    <a href="#" class="text-white transition-all duration-300 hover:text-[#ffcc4e] hover:scale-125" aria-label="Telegram">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" x2="11" y1="2" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                    </a>
+                    <a href="#" class="text-white transition-all duration-300 hover:text-[#ffcc4e] hover:scale-125" aria-label="YouTube">
+                        <i data-lucide="youtube" class="w-6 h-6"></i>
+                    </a>
+                </div>
+
+                <div class="flex gap-4 order-3">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Google Play" class="h-10 cursor-pointer hover:opacity-80 transition">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="App Store" class="h-10 cursor-pointer hover:opacity-80 transition">
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
+                <p>© 2024 جميع الحقوق محفوظة لشركة YOU</p>
+                <a href="#" class="mt-4 md:mt-0 flex items-center gap-2 hover:text-yellow-400 transition font-bold">
+                    <i data-lucide="alert-circle" class="w-4 h-4"></i>
+                    للشكاوى
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        function toggleSubmenu(id) {
+            const submenu = document.getElementById(id);
+            submenu.classList.toggle('hidden');
+        }
+
+        // Slider Logic
+        let currentSlide = 0;
+        const slides = Array.from(document.querySelectorAll('.slide'));
+        const indicators = Array.from(document.querySelectorAll('.slider-indicator'));
+        const totalSlides = slides.length;
+        let slideInterval = null;
+
+        function showSlide(index) {
+            if (!totalSlides) return;
+            const safeIndex = ((index % totalSlides) + totalSlides) % totalSlides;
+
+            slides.forEach((slide, i) => {
+                const isActive = i === safeIndex;
+                slide.classList.toggle('active', isActive);
+                slide.setAttribute('aria-hidden', String(!isActive));
+            });
+
+            indicators.forEach((ind, i) => {
+                const isActive = i === safeIndex;
+                ind.classList.toggle('active', isActive);
+                ind.setAttribute('aria-current', isActive ? 'true' : 'false');
+            });
+
+            currentSlide = safeIndex;
+        }
+
+        function nextSlide() {
+            showSlide(currentSlide + 1);
+        }
+
+        function goToSlide(index) {
+            showSlide(index);
+            if (slideInterval) {
+                clearInterval(slideInterval);
+                slideInterval = setInterval(nextSlide, 5000);
+            }
+        }
+
+        showSlide(0);
+        if (totalSlides > 1) {
+            slideInterval = setInterval(nextSlide, 5000);
+        }
+
+        // Scroll Animation Logic
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                } else {
+                    if (entry.target.classList.contains('card-animate') || 
+                        entry.target.classList.contains('animate-from-right') ||
+                        entry.target.classList.contains('animate-from-left') ||
+                        entry.target.classList.contains('animate-from-bottom')) {
+                        entry.target.classList.remove('active');
+                    }
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal-text').forEach(el => {
+            observer.observe(el);
+        });
+
+        document.querySelectorAll('.card-animate').forEach(el => {
+            observer.observe(el);
+        });
+
+        document.querySelectorAll('.animate-from-right, .animate-from-left, .animate-from-bottom').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
