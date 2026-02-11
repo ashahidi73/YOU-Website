@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="YOU للاتصالات - عالم من التواصل">
     <title>YOU | عالم من التواصل</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <!-- خط Cairo -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -108,6 +110,18 @@
         .slide.active {
             opacity: 1;
             z-index: 20;
+        }
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+        .hero-title {
+            font-size: clamp(1.8rem, 3vw + 0.4rem, 3.1rem);
+            line-height: 1.15;
         }
         .slider-indicator {
             width: 10px;
@@ -218,6 +232,35 @@
             .animate-from-bottom {
                 transition: none !important;
                 transform: none !important;
+            }
+        }
+        @media (max-width: 640px) {
+            #hero-slider {
+                height: auto;
+            }
+            #hero-slider .slide {
+                position: relative;
+                display: none;
+                opacity: 1;
+            }
+            #hero-slider .slide.active {
+                display: flex;
+                flex-direction: column;
+            }
+            .hero-bg {
+                position: relative;
+                width: 100%;
+                height: auto;
+                aspect-ratio: 16 / 9;
+                object-fit: cover;
+            }
+            .hero-content {
+                width: 100%;
+                background: #ffffff;
+                padding: 12px 16px 20px !important;
+            }
+            .hero-title {
+                font-size: clamp(1.3rem, 4.5vw + 0.2rem, 2.1rem);
             }
         }
     </style>
@@ -410,7 +453,7 @@
                 </div>
 
                 <!-- Mobile Menu Button -->
-                <button type="button" class="lg:hidden text-black" onclick="toggleMobileMenu()" aria-label="فتح القائمة">
+                <button type="button" class="lg:hidden text-white" onclick="toggleMobileMenu()" aria-label="فتح القائمة">
                     <i data-lucide="menu" class="w-7 h-7"></i>
                 </button>
             </div>
@@ -437,28 +480,22 @@
     </nav>
 
     <!-- Hero Slider -->
-    <header class="relative h-[650px] overflow-hidden bg-black text-black" id="hero-slider">
+    <header class="relative h-[520px] sm:h-[600px] md:h-[650px] overflow-hidden bg-black text-black" id="hero-slider">
         <!-- Slide 1 -->
         <div class="slide active absolute inset-0 transition-opacity duration-1000" aria-hidden="false">
-            <div class="absolute inset-0 bg-[url('4G.webp')] bg-cover bg-center"></div>
+            <img src="4G.webp" alt="" class="hero-bg" loading="eager" decoding="async" fetchpriority="high">
             
-            <div class="container mx-auto px-4 relative z-20 h-full flex flex-col justify-center items-start pt-10">
+            <div class="hero-content container mx-auto px-4 relative z-20 h-full flex flex-col justify-end items-center md:items-start text-center md:text-right pb-10 sm:pb-12">
                 <span class="bg-yellow-400 text-black px-4 py-1.5 rounded font-bold text-sm mb-4 inline-block">سمارت فورجي</span>
-                <h1 class="text-5xl md:text-6xl font-black mb-4 leading-tight text-gray-900">
+                <h1 class="hero-title font-black mb-4 leading-tight text-gray-900">
                     <span class="inline-flex items-center gap-2 bg-black px-5 py-2 rounded-full mb-3">
                         <span class="text-yellow-400">عيش</span>
                         <span class="text-white">التحدي</span>
                     </span><br>
                     <span class="text-gray-900">بسرعة 4G</span>
                 </h1>
-                <p class="text-lg md:text-xl text-gray-700 mb-8 max-w-lg leading-relaxed">
-                    تمتع بأسرع إنترنت مع باقات مكس وسمارت الجديدة. تغطية أوسع وسرعة لا تتوقف.
-                </p>
-                <div class="flex gap-3">
-                    <button type="button" class="bg-yellow-400 text-black px-8 py-3 rounded-full font-bold text-base hover:bg-yellow-300 transition shadow-lg shadow-yellow-400/20">
-                        اشترك الآن
-                    </button>
-                    <button type="button" class="border border-white text-white px-8 py-3 rounded-full font-bold text-base hover:bg-white hover:text-black transition">
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <button type="button" class="bg-black text-white px-6 py-2.5 rounded-lg font-bold text-sm sm:text-base hover:bg-gray-800 transition">
                         اعرف المزيد
                     </button>
                 </div>
@@ -467,22 +504,16 @@
 
         <!-- Slide 2 -->
         <div class="slide absolute inset-0 transition-opacity duration-1000" aria-hidden="true">
-            <div class="absolute inset-0 bg-[url('MIX.webp')] bg-cover bg-center"></div>
-            <div class="container mx-auto px-4 relative z-20 h-full flex flex-col justify-center items-start pt-10">
+            <img data-src="MIX.webp" alt="" class="hero-bg" loading="lazy" decoding="async">
+            <div class="hero-content container mx-auto px-4 relative z-20 h-full flex flex-col justify-end items-center md:items-start text-center md:text-right pb-10 sm:pb-12">
                 <span class="bg-yellow-400 text-black px-4 py-1.5 rounded font-bold text-sm mb-4 inline-block">باقات مكس</span>
-                <h1 class="text-5xl md:text-6xl font-black mb-4 leading-tight text-white">
+                <h1 class="hero-title font-black mb-4 leading-tight text-black">
                     تواصل <br>
-                    <span class="text-white">بلا حدود</span>
+                    <span class="text-black">بلا حدود</span>
                 </h1>
-                <div class="inline-flex items-center bg-black text-white px-5 py-2 rounded-full font-bold text-5xl md:text-6xl mb-3 leading-tight">
-                    تنوع يلبي احتياجاتك
-                </div>
-                <p class="text-5xl md:text-6xl text-black mb-8 max-w-lg leading-tight">
-                    بتقنيتي 2G و 4G
-                </p>
-                <div class="flex gap-3">
-                    <button type="button" class="bg-yellow-400 text-black px-8 py-3 rounded-full font-bold text-base hover:bg-yellow-300 transition shadow-lg shadow-yellow-400/20">
-                        استكشف الباقات
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <button type="button" class="bg-black text-white px-6 py-2.5 rounded-lg font-bold text-sm sm:text-base hover:bg-gray-800 transition">
+                        اعرف المزيد
                     </button>
                 </div>
             </div>
@@ -490,37 +521,34 @@
 
         <!-- Slide 3 -->
         <div class="slide absolute inset-0 transition-opacity duration-1000" aria-hidden="true">
-            <div class="absolute inset-0 bg-[url('Busi.png')] bg-cover bg-center"></div>
-            <div class="container mx-auto px-4 relative z-20 h-full flex flex-col justify-center items-start pt-10">
+            <img data-src="Busi.png" alt="" class="hero-bg" loading="lazy" decoding="async">
+            <div class="hero-content container mx-auto px-4 relative z-20 h-full flex flex-col justify-end items-center md:items-start text-center md:text-right pb-10 sm:pb-12">
                 <span class="bg-yellow-400 text-black px-4 py-1.5 rounded font-bold text-sm mb-4 inline-block">للشركات</span>
-                <h1 class="text-5xl md:text-6xl font-black mb-4 leading-tight text-black">
+                <h1 class="hero-title font-black mb-4 leading-tight text-black">
                     حلول أعمال <br>
                     <span class="text-black">ذكية ومتكاملة</span>
                 </h1>
-                <p class="text-lg md:text-xl text-black mb-8 max-w-lg">خدمات متكاملة لنمو أعمالك ورفع كفاءة فريقك.</p>
-                <button type="button" class="bg-yellow-400 text-black px-8 py-3 rounded-full font-bold text-base hover:bg-yellow-300 transition">تواصل معنا</button>
+                <button type="button" class="bg-black text-white px-6 py-2.5 rounded-lg font-bold text-sm sm:text-base hover:bg-gray-800 transition">اعرف المزيد</button>
             </div>
         </div>
 
         <!-- Slide 4 -->
         <div class="slide absolute inset-0 transition-opacity duration-1000" aria-hidden="true">
-            <div class="absolute inset-0 bg-[url('YOUapp.webp')] bg-cover bg-center"></div>
-            <div class="container mx-auto px-4 relative z-20 h-full flex flex-col justify-center items-start pt-10">
+            <img data-src="YOUapp.webp" alt="" class="hero-bg" loading="lazy" decoding="async">
+            <div class="hero-content container mx-auto px-4 relative z-20 h-full flex flex-col justify-end items-center md:items-start text-center md:text-right pb-10 sm:pb-12">
                 <span class="bg-yellow-400 text-black px-4 py-1.5 rounded font-bold text-sm mb-4 inline-block">تطبيق YOU</span>
-                <h1 class="text-5xl md:text-6xl font-black mb-4 leading-tight text-black">
+                <h1 class="hero-title font-black mb-4 leading-tight text-black">
                     تحكم في حساباتك <br>
                     <span class="text-black">بكل سهولة</span>
                 </h1>
-                <p class="text-lg md:text-xl text-black mb-8 max-w-lg">حمل التطبيق الآن واستمتع بإدارة رصيدك وخدماتك بكل سهولة.</p>
-                <div class="flex gap-3">
-                    <button type="button" class="bg-yellow-400 text-black px-6 py-2.5 rounded-full font-bold text-sm hover:bg-yellow-300 transition">App Store</button>
-                    <button type="button" class="bg-transparent border-2 border-white text-black px-6 py-2.5 rounded-full font-bold text-sm hover:bg-white hover:text-black transition">Google Play</button>
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <button type="button" class="bg-black text-white px-6 py-2.5 rounded-lg font-bold text-sm sm:text-base hover:bg-gray-800 transition">اعرف المزيد</button>
                 </div>
             </div>
         </div>
 
         <!-- Indicators -->
-        <div class="absolute bottom-20 left-1/2 transform -translate-x-1/2 z-30 flex gap-3">
+        <div class="absolute bottom-8 sm:bottom-12 md:bottom-20 left-1/2 transform -translate-x-1/2 z-30 flex gap-3">
             <button type="button" class="slider-indicator active" onclick="goToSlide(0)" aria-label="الشريحة 1" aria-current="true"></button>
             <button type="button" class="slider-indicator" onclick="goToSlide(1)" aria-label="الشريحة 2" aria-current="false"></button>
             <button type="button" class="slider-indicator" onclick="goToSlide(2)" aria-label="الشريحة 3" aria-current="false"></button>
@@ -529,21 +557,21 @@
     </header>
 
     <!-- Overlapping Cards -->
-    <div class="relative z-40 -mt-14 container mx-auto px-4 pointer-events-none">
+    <div class="relative z-40 mt-8 sm:-mt-6 md:-mt-14 container mx-auto px-4 pointer-events-none">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mx-auto w-fit justify-items-center">
-            <div class="overlap-card w-28 h-28 p-2 flex flex-col items-center justify-center gap-2 pointer-events-auto">
+            <div class="overlap-card w-24 h-24 sm:w-28 sm:h-28 p-2 flex flex-col items-center justify-center gap-2 pointer-events-auto">
                 <i data-lucide="wifi" class="w-6 h-6"></i>
                 <span class="font-bold text-xs text-center leading-tight">سمارت فورجي</span>
             </div>
-            <div class="overlap-card w-28 h-28 p-2 flex flex-col items-center justify-center gap-2 pointer-events-auto">
+            <div class="overlap-card w-24 h-24 sm:w-28 sm:h-28 p-2 flex flex-col items-center justify-center gap-2 pointer-events-auto">
                 <i data-lucide="layers" class="w-6 h-6"></i>
                 <span class="font-bold text-xs text-center leading-tight">مكس فورجي</span>
             </div>
-            <div class="overlap-card w-28 h-28 p-2 flex flex-col items-center justify-center gap-2 pointer-events-auto">
+            <div class="overlap-card w-24 h-24 sm:w-28 sm:h-28 p-2 flex flex-col items-center justify-center gap-2 pointer-events-auto">
                 <i data-lucide="users" class="w-6 h-6"></i>
                 <span class="font-bold text-xs text-center leading-tight">باقات سوا</span>
             </div>
-            <div class="overlap-card w-28 h-28 p-2 flex flex-col items-center justify-center gap-2 pointer-events-auto">
+            <div class="overlap-card w-24 h-24 sm:w-28 sm:h-28 p-2 flex flex-col items-center justify-center gap-2 pointer-events-auto">
                 <i data-lucide="plane" class="w-6 h-6"></i>
                 <span class="font-bold text-xs text-center leading-tight">باقات التجوال</span>
             </div>
@@ -587,7 +615,7 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="card-animate delay-100 bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 group flex flex-col h-full">
                     <div class="h-48 overflow-hidden flex-shrink-0">
-                        <img src="OldN.webp" alt="استرجع رقمك القديم" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                        <img src="OldN.webp" alt="استرجع رقمك القديم" loading="lazy" decoding="async" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                     </div>
                     <div class="p-6 text-right flex flex-col flex-grow">
                         <h3 class="text-xl font-bold text-black mb-2">استرجع رقمك القديم</h3>
@@ -604,7 +632,7 @@
 
                 <div class="card-animate delay-200 bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 group flex flex-col h-full">
                     <div class="h-48 overflow-hidden flex-shrink-0">
-                        <img src="student.webp" alt="خط الطالب" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                        <img src="student.webp" alt="خط الطالب" loading="lazy" decoding="async" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                     </div>
                     <div class="p-6 text-right flex flex-col flex-grow">
                         <h3 class="text-xl font-bold text-black mb-2">خط الطالب</h3>
@@ -621,7 +649,7 @@
 
                 <div class="card-animate delay-300 bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 group flex flex-col h-full">
                     <div class="h-48 overflow-hidden flex-shrink-0">
-                        <img src="Bundle.webp" alt="باقة الطالب" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                        <img src="Bundle.webp" alt="باقة الطالب" loading="lazy" decoding="async" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                     </div>
                     <div class="p-6 text-right flex flex-col flex-grow">
                         <h3 class="text-xl font-bold text-black mb-2">باقة الطالب</h3>
@@ -657,7 +685,7 @@
                 </div>
                 <div class="md:w-1/2 order-1 md:order-2 animate-from-bottom">
                     <div class="relative overflow-hidden rounded-3xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
-                        <img src="nagham.png" alt="خدمة نغم" class="w-full h-64 md:h-80 object-cover transform hover:scale-105 transition-transform duration-500">
+                        <img src="nagham.webp" alt="خدمة نغم" loading="lazy" decoding="async" class="w-full h-64 md:h-80 object-cover transform hover:scale-105 transition-transform duration-500">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
                     </div>
                 </div>
@@ -677,7 +705,7 @@
                 </div>
                 <div class="md:w-1/2 order-1 md:order-2 animate-from-bottom">
                     <div class="relative overflow-hidden rounded-3xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
-                        <img src="roaming.png" alt="خدمة طمنهم عليك" class="w-full h-64 md:h-80 object-cover transform hover:scale-105 transition-transform duration-500">
+                        <img src="roaming.webp" alt="خدمة طمنهم عليك" loading="lazy" decoding="async" class="w-full h-64 md:h-80 object-cover transform hover:scale-105 transition-transform duration-500">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
                     </div>
                 </div>
@@ -783,13 +811,13 @@
                 </div>
 
                 <div class="flex gap-4 order-3">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Google Play" class="h-10 cursor-pointer hover:opacity-80 transition">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="App Store" class="h-10 cursor-pointer hover:opacity-80 transition">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Google Play" loading="lazy" decoding="async" class="h-10 cursor-pointer hover:opacity-80 transition">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="App Store" loading="lazy" decoding="async" class="h-10 cursor-pointer hover:opacity-80 transition">
                 </div>
             </div>
 
             <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
-                <p>© 2026 جميع الحقوق محفوظة لشركة YOU</p>
+                <p>© 2024 جميع الحقوق محفوظة لشركة YOU</p>
                 <a href="#" class="mt-4 md:mt-0 flex items-center gap-2 hover:text-yellow-400 transition font-bold">
                     <i data-lucide="alert-circle" class="w-4 h-4"></i>
                     للشكاوى
@@ -818,6 +846,15 @@
         const totalSlides = slides.length;
         let slideInterval = null;
 
+        function loadSlideImage(slide) {
+            if (!slide) return;
+            const img = slide.querySelector('img[data-src]');
+            if (img) {
+                img.src = img.dataset.src;
+                img.removeAttribute('data-src');
+            }
+        }
+
         function showSlide(index) {
             if (!totalSlides) return;
             const safeIndex = ((index % totalSlides) + totalSlides) % totalSlides;
@@ -834,6 +871,10 @@
                 ind.setAttribute('aria-current', isActive ? 'true' : 'false');
             });
 
+            loadSlideImage(slides[safeIndex]);
+            if (totalSlides > 1) {
+                loadSlideImage(slides[(safeIndex + 1) % totalSlides]);
+            }
             currentSlide = safeIndex;
         }
 
